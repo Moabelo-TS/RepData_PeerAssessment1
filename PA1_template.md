@@ -1,7 +1,7 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-Author: Moabelo TS
-date: "05/03/2021"
+author: Moabelo TS
+date: "07/03/2021"
 output: 
   html_document:
     keep_md: true
@@ -15,8 +15,9 @@ Unzip data to obtain a csv file.
 ```r
 library("data.table")
 library(ggplot2)
-
-unzip("activity.zip")
+fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
+download.file(fileUrl, destfile = "C:/Users/Tumelo/Desktop/data Science/Reproducible Research/Week2/Project1/repdata%2Fdata%2Factivity.zip")
+unzip("repdata%2Fdata%2Factivity.zip")
 ```
 
 ## Reading csv Data into Data.Table and head the data
@@ -59,12 +60,12 @@ head(Total_Steps, 10)
 ##  9: 2012-10-09 12811
 ## 10: 2012-10-10  9900
 ```
-## Make a histogram of the total number of steps taken each day.
+2. Make a histogram of the total number of steps taken each day.
 
 
 ```r
 ggplot(Total_Steps, aes(x = steps)) +
-    geom_histogram(fill = "red", binwidth = 1000) +
+    geom_histogram(fill = "green", binwidth = 1000) +
     labs(title = "Daily Steps", x = "Steps", y = "Frequency")
 ```
 
@@ -94,7 +95,7 @@ Total_Steps[, .(Mean_Steps = mean(steps, na.rm = TRUE), Median_Steps = median(st
 
 ```r
 Interval_data <- data[, c(lapply(.SD, mean, na.rm = TRUE)), .SDcols = c("steps"), by = .(interval)] 
-ggplot(Interval_data, aes(x = interval, y = steps)) + geom_line(color="red", size=1) + labs(title = "Avg. Daily Steps", x = "Interval", y = "Avg. Steps per day")
+ggplot(Interval_data, aes(x = interval, y = steps)) + geom_line(color="green", size=1) + labs(title = "Avg. Daily Steps", x = "Interval", y = "Avg. Steps per day")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
@@ -110,10 +111,6 @@ Interval_data[steps == max(steps), .(max_interval = interval)]
 ##    max_interval
 ## 1:          835
 ```
-
-
-
-
 
 
 ## Imputing missing values
@@ -140,7 +137,7 @@ data[is.na(steps), "steps"] <- data[, c(lapply(.SD, median, na.rm = TRUE)), .SDc
 
 
 ```r
-data.table::fwrite(x = data, file = "C:/Users/Tumelo.Moabelo/Desktop/Data Science/Reproducible Research/Week2/Project1/tidydata.CSV", quote = FALSE)
+data.table::fwrite(x = data, file = "C:/Users/Tumelo/Desktop/data Science/Reproducible Research/Week2/Project1/tidydata.CSV")
 ```
 
 4. Make a histogram of the total number of steps taken each day and calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
@@ -160,7 +157,7 @@ Total_Steps[, .(Mean_Steps = mean(steps), Median_Steps = median(steps))]
 ```
 
 ```r
-ggplot(Total_Steps, aes(x = steps)) + geom_histogram(fill = "red", binwidth = 1000) + labs(title = "Daily Steps", x = "Steps", y = "Frequency")
+ggplot(Total_Steps, aes(x = steps)) + geom_histogram(fill = "green", binwidth = 1000) + labs(title = "Daily Steps", x = "Steps", y = "Frequency")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
@@ -174,7 +171,7 @@ Second Part (fillin in na with median) | 9354.23 | 10395
 ## Are there differences in activity patterns between weekdays and weekends?
 1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
 
-#Just recreating data from scratch then making the new factor variable, hoewever is not necessary
+#Just recreating data from scratch then making the new factor variable, hoewever is not necessary (just for clarity)
 
 ```r
 data <- data.table::fread("activity.csv")
@@ -199,6 +196,7 @@ head(data, 10)
 ##  9:    NA 2012-10-01       40      Monday            weekday
 ## 10:    NA 2012-10-01       45      Monday            weekday
 ```
+
 2. Make a panel plot containing a time series plot (i.e. 𝚝𝚢𝚙𝚎 = "𝚕") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
 
